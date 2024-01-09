@@ -1,0 +1,13 @@
+{
+  "kind": "calendar#event",
+  "summary": "My Event Today",
+  "description": "Description of my event today",
+  "start": {
+    "dateTime": "2024-01-10T12:00:00",
+    "timeZone": "America/New_York"
+  },
+  "end": {
+    "dateTime": "2024-01-10T13:00:00",
+    "timeZone": "America/New_York"
+  }
+}

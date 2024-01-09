@@ -1,0 +1,10 @@
+# MySQL Database Configuration
+DB_HOST=127.0.0.1
+DB_USER=root
+DB_PASS=
+DB_NAME=devDB
+DB_PORT=3306
+
+# Google Calendar API Configuration
+GOOGLE_CREDENTIALS_PATH="./credentials.json"
+GOOGLE_CALENDAR_ID="example@gmail.com"

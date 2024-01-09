@@ -1,0 +1,15 @@
+{
+  "name": "egydio/mysql-to-google-calendar",
+  "type": "project",
+  "authors": [
+    {
+      "name": "EgydioBNeto",
+      "email": "egydiobolonhezi@gmail.com"
+    }
+  ],
+  "require": {
+    "google/apiclient": "^2.15.0",
+    "google/auth": "*",
+    "vlucas/phpdotenv": "*"
+  }
+}
