@@ -21,46 +21,58 @@ if ($connection->connect_error) {
     die("Failed to connect to MySQL: " . $connection->connect_error);
 }
 
-// Check if the table 'googleCalendarTable' already exists
-$tableCheck = $connection->query("SHOW TABLES LIKE 'googleCalendarTable'");
+// Check if the table 'CalEvents' already exists
+$tableCheck = $connection->query("SHOW TABLES LIKE 'CalEvents'");
 
 if ($tableCheck->num_rows == 0) {
-    // Table 'googleCalendarTable' does not exist, create it
+    // Table 'CalEvents' does not exist, create it
     $createTableSQL = "
-    CREATE TABLE googleCalendarTable (
-        id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-        summary VARCHAR(255) NOT NULL,
-        description TEXT,
-        start_datetime DATETIME,
-        end_datetime DATETIME
-    );
-    ";
+CREATE TABLE `CalEvents` (
+  `id` int(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  `PCEventID` int(11) NOT NULL,
+  `title` text COLLATE utf8_unicode_ci NOT NULL,
+  `description` text COLLATE utf8_unicode_ci NOT NULL,
+  `location` text COLLATE utf8_unicode_ci,
+  `time_from` int(11) NOT NULL,
+  `time_to` int(11) NOT NULL,
+  `google_calendar_event_id` text COLLATE utf8_unicode_ci,
+  `created` text COLLATE utf8_unicode_ci NOT NULL,
+  `OwnerName` text COLLATE utf8_unicode_ci NOT NULL,
+  `OwnerPhone` text COLLATE utf8_unicode_ci NOT NULL,
+  `OwnerEmail` text COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+";
 
     if ($connection->query($createTableSQL) === TRUE) {
-        echo "Table 'googleCalendarTable' created successfully!\n";
+        echo "Table 'CalEvents' created successfully!\n";
     } else {
         echo "Error creating table: " . $connection->error . "\n";
     }
 }
 
-
 // Read data from the JSON file
 $jsonData = file_get_contents('sample.json');
 $eventData = json_decode($jsonData, true);
 
-// Insert data into 'googleCalendarTable'
-$insertDataSQL = "INSERT INTO googleCalendarTable (
-    summary, description, start_datetime, end_datetime
+// Prepare the SQL statement
+$insertDataSQL = $connection->prepare("INSERT INTO CalEvents (
+    PCEventID, title, description, location, time_from, time_to, google_calendar_event_id, created, OwnerName, OwnerPhone, OwnerEmail
 ) VALUES (
-    '{$eventData["summary"]}', '{$eventData["description"]}', '{$eventData["start"]["dateTime"]}', '{$eventData["end"]["dateTime"]}'
-)";
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+)");
 
-if ($connection->query($insertDataSQL) === TRUE) {
-    echo "Event '{$eventData["summary"]}' added to the database!\n";
+// Bind parameters
+$insertDataSQL->bind_param("isssiiissss", $eventData["PCEventID"], $eventData["title"], $eventData["description"], $eventData["location"], $eventData["time_from"], $eventData["time_to"], $eventData["google_calendar_event_id"], $eventData["created"], $eventData["OwnerName"], $eventData["OwnerPhone"], $eventData["OwnerEmail"]);
+
+// Execute the statement
+if ($insertDataSQL->execute()) {
+    echo "Event '{$eventData["title"]}' added to the database!\n";
 } else {
-    echo "Error adding event to the database: " . $connection->error . "\n";
+    echo "Error adding event to the database: " . $insertDataSQL->error . "\n";
 }
 
-$connection->close();
+// Close the prepared statement
+$insertDataSQL->close();
 
+$connection->close();
 ?>
