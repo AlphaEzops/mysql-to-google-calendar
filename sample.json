@@ -5,7 +5,7 @@
   "location": "Event Location",
   "time_from": 1704983410,
   "time_to": 1704997810,
-  "google_calendar_event_id": "your_google_calendar_event_id",
+  "google_calendar_event_id": null,
   "created": "2024-01-10T10:00:00",
   "OwnerName": "Event Owner",
   "OwnerPhone": "Owner's Phone",

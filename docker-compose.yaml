@@ -14,5 +14,15 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
 
+  # phpMyAdmin service
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    environment:
+      PMA_ARBITRARY: 1
+    ports:
+      - "8080:80"
+    links:
+      - mysql:db
+
 volumes:
   mysql_data:

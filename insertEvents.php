@@ -75,4 +75,3 @@ if ($insertDataSQL->execute()) {
 $insertDataSQL->close();
 
 $connection->close();
-?>
